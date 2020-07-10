@@ -34,7 +34,7 @@ module.exports = {
         ],
       },
     ],
-    'no-console': 'error',
+
     // '@typescript-eslint/no-unnecessary-condition': 'error',
   },
 };

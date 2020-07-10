@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "fastify": "^3.0.0",
-    "fastify-formbody": "^4.0.3",
-    "got": "^11.5.0"
+    "got": "^11.5.0",
+    "p-queue": "^6.5.0"
   }
 }
