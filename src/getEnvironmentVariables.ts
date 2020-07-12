@@ -7,7 +7,7 @@ type EnvVars = {
   USERNAME?: string;
   ACCESS_TOKEN?: string;
   SERVER_PORT?: number;
-  MERGED_BY?: string;
+  MERGED_BY_USERS?: string;
 };
 
 export function getEnvironmentVariables() {
@@ -15,7 +15,7 @@ export function getEnvironmentVariables() {
     USERNAME,
     ACCESS_TOKEN,
     SERVER_PORT = 3000,
-    MERGED_BY,
+    MERGED_BY_USERS,
   } = process.env as EnvVars;
 
   if (!USERNAME) {
@@ -30,6 +30,6 @@ export function getEnvironmentVariables() {
     USERNAME,
     ACCESS_TOKEN,
     SERVER_PORT,
-    MERGED_BY: MERGED_BY?.split(',') ?? [],
+    MERGED_BY_USERS: MERGED_BY_USERS?.split(',') ?? [],
   };
 }

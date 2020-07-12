@@ -2,6 +2,7 @@ import * as backport from 'backport';
 import { ConfigOptions } from 'backport/dist/options/ConfigOptions';
 import got from 'got';
 import { addPullRequestComment } from './github/addPullRequestComment';
+import { logger } from './logger';
 
 export type GithubBody = {
   action: string;
@@ -32,11 +33,14 @@ export async function backportTask(
     throw new Error('Missing pull request number');
   }
 
-  console.log('Starting backport: ', { ...config, accessToken: '<REDACTED>' });
-  console.log(backport);
-
+  logger.info(
+    `Starting backport: ${JSON.stringify({
+      ...config,
+      accessToken: '<REDACTED>',
+    })}`
+  );
   const backportResponse = await backport.run(config);
-  console.log('Finished backport: ', backportResponse);
+  logger.info(`Finished backport: ${JSON.stringify(backportResponse)}`);
 
   await addPullRequestComment({
     upstream: config.upstream,

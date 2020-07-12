@@ -2,17 +2,18 @@ import fastify from 'fastify';
 import PQueue from 'p-queue';
 import { backportTask, GithubBody } from './backportTask';
 import { getEnvironmentVariables } from './getEnvironmentVariables';
+import { logger } from './logger';
 
 const {
   USERNAME,
   ACCESS_TOKEN,
   SERVER_PORT = 3000,
-  MERGED_BY,
+  MERGED_BY_USERS,
 } = getEnvironmentVariables();
 
 // only allow a single backport operation at a time
 const queue = new PQueue({ concurrency: 1 });
-const server = fastify();
+const server = fastify({ logger: logger });
 
 server.get('/', async (request, reply) => {
   reply.send(`Backport server running... `);
@@ -23,14 +24,17 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
   // ignore anything but merged PRs
   const isMerged = body.action === 'closed' && body.pull_request.merged;
   if (!isMerged) {
+    reply.code(204);
     return;
   }
 
-  // limit to people listed in `MERGED_BY` env varible
-  if (
-    MERGED_BY.length > 0 &&
-    !MERGED_BY.includes(body.pull_request.merged_by.login)
-  ) {
+  // limit to people listed in `MERGED_BY_USERS` env varible
+  const mergedByUser = body.pull_request.merged_by.login;
+  if (MERGED_BY_USERS.length > 0 && !MERGED_BY_USERS.includes(mergedByUser)) {
+    logger.info(
+      `Skipping: Merged by "${mergedByUser}" who is not in the "MERGED_BY_USERS" list: ${MERGED_BY_USERS}`
+    );
+    reply.code(204);
     return;
   }
 
@@ -39,17 +43,22 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
     try {
       return await backportTask(body, USERNAME, ACCESS_TOKEN);
     } catch (e) {
-      console.log('Something happened...', e);
+      logger.error('An error occurred while running backport task');
+      logger.error(e);
     }
   });
 
-  reply.send();
+  reply.send('Backport started...');
 });
 
 // Run the server!
-server.listen(SERVER_PORT, (err, address) => {
+server.listen(SERVER_PORT, (err) => {
   if (err) {
     throw err;
   }
-  server.log.info(`server listening on ${address}`);
+});
+
+process.on('uncaughtException', function (err) {
+  logger.error(err);
+  process.exit();
 });

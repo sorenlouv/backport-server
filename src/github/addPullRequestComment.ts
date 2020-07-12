@@ -37,5 +37,10 @@ export function getPullRequestBody(backportResponse: BackportResponse): string {
     return ` - ❌ ${result.targetBranch}: ${result.errorMessage}`;
   });
 
-  return `${header}\n${details.join('\n')}`;
+  const generalErrorMessage =
+    'errorMessage' in backportResponse
+      ? `The backport operation failed due to the following error:\n${backportResponse.errorMessage}`
+      : '';
+
+  return `${header}\n${details.join('\n')}\n${generalErrorMessage}`;
 }
