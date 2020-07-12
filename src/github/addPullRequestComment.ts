@@ -26,21 +26,30 @@ export function addPullRequestComment({
 
 export function getPullRequestBody(backportResponse: BackportResponse): string {
   const header = backportResponse.success
-    ? '## 💚 Backport successful\nThe PR was backported to the following branches:'
-    : '## 💔 Backport was not successful\nThe PR was attempted backported to the following branches:';
+    ? '## 💚 Backport successful\n'
+    : '## 💔 Backport was not successful\n';
 
-  const details = backportResponse.results.map((result) => {
-    if (result.success) {
-      return ` - ✅ [${result.targetBranch}](${result.pullRequestUrl})`;
-    }
+  const detailsHeader =
+    backportResponse.results.length > 0
+      ? backportResponse.success
+        ? 'The PR was backported to the following branches:\n'
+        : 'The PR was attempted backported to the following branches:\n'
+      : '';
 
-    return ` - ❌ ${result.targetBranch}: ${result.errorMessage}`;
-  });
+  const details = backportResponse.results
+    .map((result) => {
+      if (result.success) {
+        return ` - ✅ [${result.targetBranch}](${result.pullRequestUrl})`;
+      }
+
+      return ` - ❌ ${result.targetBranch}: ${result.errorMessage}`;
+    })
+    .join('\n');
 
   const generalErrorMessage =
     'errorMessage' in backportResponse
-      ? `The backport operation failed due to the following error:\n${backportResponse.errorMessage}`
+      ? `The backport operation could not be completed due to the following error:\n${backportResponse.errorMessage}`
       : '';
 
-  return `${header}\n${details.join('\n')}\n${generalErrorMessage}`;
+  return `${header}${detailsHeader}${details}\n${generalErrorMessage}`;
 }

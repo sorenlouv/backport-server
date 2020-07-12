@@ -16,9 +16,10 @@ describe('getPullRequestBody', () => {
     expect(body).toMatchInlineSnapshot(`
       "## 💚 Backport successful
       The PR was backported to the following branches:
-       ✅ [7.8](url1)
-       ✅ [7.7](url2)
-       ✅ [7.6](url3)"
+       - ✅ [7.8](url1)
+       - ✅ [7.7](url2)
+       - ✅ [7.6](url3)
+      "
     `);
   });
 
@@ -43,9 +44,25 @@ describe('getPullRequestBody', () => {
     expect(body).toMatchInlineSnapshot(`
       "## 💔 Backport was not successful
       The PR was attempted backported to the following branches:
-       ✅ [7.8](url1)
-       ❌ 7.7: Something went wrong
-       ❌ 7.6: Something else went wrong"
+       - ✅ [7.8](url1)
+       - ❌ 7.7: Something went wrong
+       - ❌ 7.6: Something else went wrong
+      "
+    `);
+  });
+
+  it('should output overall error when available', () => {
+    const body = getPullRequestBody({
+      success: false,
+      results: [],
+      errorMessage: 'Something went wrong completely wrong',
+    });
+
+    expect(body).toMatchInlineSnapshot(`
+      "## 💔 Backport was not successful
+
+      The backport operation could not be completed due to the following error:
+      Something went wrong completely wrong"
     `);
   });
 });
