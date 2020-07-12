@@ -39,7 +39,7 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
     return;
   }
 
-  // add backport operation to queue to ensure multiple request happen in sequence - not in parallel
+  // add backport operation to queue to ensure simultaneous request happen in sequence - not in parallel
   queue.add(async () => {
     try {
       return await backportTask(body, USERNAME, ACCESS_TOKEN);

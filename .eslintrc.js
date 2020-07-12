@@ -29,6 +29,7 @@ module.exports = {
       },
     ],
 
+    // disabled rules
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
 };
