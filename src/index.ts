@@ -7,7 +7,8 @@ import { logger } from './logger';
 const {
   USERNAME,
   ACCESS_TOKEN,
-  SERVER_PORT = 3000,
+  SERVER_PORT,
+  SERVER_HOST,
   MERGED_BY_USERS,
 } = getEnvironmentVariables();
 
@@ -52,13 +53,14 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
 });
 
 // Run the server!
-server.listen(SERVER_PORT, (err) => {
+server.listen(SERVER_PORT, SERVER_HOST, (err) => {
   if (err) {
     throw err;
   }
 });
 
-process.on('uncaughtException', function (err) {
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught error');
   logger.error(err);
   process.exit();
 });
