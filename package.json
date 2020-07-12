@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@octokit/request": "^5.4.5",
+    "backport": "^5.5.0",
     "dotenv": "^8.2.0",
     "fastify": "^3.0.0",
     "got": "^11.5.0",
