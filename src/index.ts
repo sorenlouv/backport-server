@@ -1,20 +1,14 @@
-import dotenv from 'dotenv';
 import fastify from 'fastify';
 import PQueue from 'p-queue';
 import { backportTask, GithubBody } from './backportTask';
+import { getEnvironmentVariables } from './getEnvironmentVariables';
 
-// load environment variables
-dotenv.config();
-
-const { USERNAME, ACCESS_TOKEN, SERVER_PORT = 3000 } = process.env;
-
-if (!USERNAME) {
-  throw new Error('Missing `USERNAME` environment variable');
-}
-
-if (!ACCESS_TOKEN) {
-  throw new Error('Missing `ACCESS_TOKEN` environent variable');
-}
+const {
+  USERNAME,
+  ACCESS_TOKEN,
+  SERVER_PORT = 3000,
+  MERGED_BY,
+} = getEnvironmentVariables();
 
 // only allow a single backport operation at a time
 const queue = new PQueue({ concurrency: 1 });
@@ -32,6 +26,14 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
     return;
   }
 
+  // limit to people listed in `MERGED_BY` env varible
+  if (
+    MERGED_BY.length > 0 &&
+    !MERGED_BY.includes(body.pull_request.merged_by.login)
+  ) {
+    return;
+  }
+
   // add backport operation to queue to ensure multiple request happen in sequence - not in parallel
   queue.add(async () => {
     try {
@@ -45,7 +47,7 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
 });
 
 // Run the server!
-server.listen(SERVER_PORT as number, (err, address) => {
+server.listen(SERVER_PORT, (err, address) => {
   if (err) {
     throw err;
   }
