@@ -31,6 +31,8 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "@octokit/request": "^5.4.5",
+    "dotenv": "^8.2.0",
     "fastify": "^3.0.0",
     "got": "^11.5.0",
     "p-queue": "^6.5.0"
