@@ -4,13 +4,14 @@ import { backportTask, GithubBody } from './backportTask';
 import { getEnvironmentVariables } from './getEnvironmentVariables';
 import { logger } from './logger';
 
+const envVars = getEnvironmentVariables();
 const {
   USERNAME,
   ACCESS_TOKEN,
   SERVER_PORT,
   SERVER_HOST,
   MERGED_BY_USERS,
-} = getEnvironmentVariables();
+} = envVars;
 
 // only allow a single backport operation at a time
 const queue = new PQueue({ concurrency: 1 });
@@ -57,6 +58,8 @@ server.listen(SERVER_PORT, SERVER_HOST, (err) => {
   if (err) {
     throw err;
   }
+
+  logger.info(`Environment variables: ${JSON.stringify(envVars)}`);
 });
 
 process.on('uncaughtException', (err) => {
