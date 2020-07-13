@@ -59,7 +59,7 @@ server.listen(SERVER_PORT, SERVER_HOST, (err) => {
     throw err;
   }
 
-  logger.info(`Environment variables: ${JSON.stringify(envVars)}`);
+  logger.info(`Environment variables: ${JSON.stringify(envVars, null, 2)}`);
 });
 
 process.on('uncaughtException', (err) => {
