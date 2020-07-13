@@ -33,9 +33,7 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
   // limit to people listed in `MERGED_BY_USERS` env varible
   const mergedByUser = body.pull_request.merged_by.login;
   if (MERGED_BY_USERS.length > 0 && !MERGED_BY_USERS.includes(mergedByUser)) {
-    logger.info(
-      `Skipping: Merged by "${mergedByUser}" who is not in the "MERGED_BY_USERS" list: ${MERGED_BY_USERS}`
-    );
+    logger.info(`Skipping: Merged by "${mergedByUser}"`);
     reply.code(204);
     return;
   }
