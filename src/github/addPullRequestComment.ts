@@ -21,11 +21,11 @@ export function addPullRequestComment({
     return;
   }
 
+  const [repoOwner, repoName] = upstream.split('/');
   logger.info(
     `Posting comment to https://github.com/${repoOwner}/${repoName}/pull/${pullNumber}`
   );
 
-  const [repoOwner, repoName] = upstream.split('/');
   return request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
     headers: {
       authorization: `token ${accessToken}`,
