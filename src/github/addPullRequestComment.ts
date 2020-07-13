@@ -1,5 +1,6 @@
 import { request } from '@octokit/request';
 import { BackportResponse } from 'backport/dist/main';
+import { logger } from '../logger';
 
 export function addPullRequestComment({
   upstream,
@@ -11,7 +12,15 @@ export function addPullRequestComment({
   pullNumber: number;
   accessToken: string;
   backportResponse: BackportResponse;
-}): Promise<unknown> {
+}): unknown {
+  // abort if there are 0 results and an error occurred
+  if (backportResponse.results.length === 0) {
+    logger.warn(
+      `Not posting pull request comment because there are no results to publish`
+    );
+    return;
+  }
+
   const [repoOwner, repoName] = upstream.split('/');
   return request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
     headers: {

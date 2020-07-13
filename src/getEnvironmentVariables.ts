@@ -17,7 +17,7 @@ export function getEnvironmentVariables() {
     ACCESS_TOKEN,
     SERVER_HOST = '127.0.0.1',
     SERVER_PORT = 3000,
-    MERGED_BY_USERS,
+    MERGED_BY_USERS = '',
   } = process.env as EnvVars;
 
   if (!USERNAME) {
@@ -33,6 +33,6 @@ export function getEnvironmentVariables() {
     ACCESS_TOKEN,
     SERVER_HOST,
     SERVER_PORT,
-    MERGED_BY_USERS: MERGED_BY_USERS?.split(',') ?? [],
+    MERGED_BY_USERS: MERGED_BY_USERS?.split(',').map((name) => name.trim()),
   };
 }

@@ -4,6 +4,10 @@ import got from 'got';
 import { addPullRequestComment } from './github/addPullRequestComment';
 import { logger } from './logger';
 
+function prettyStringify(obj: unknown) {
+  return JSON.stringify(obj, null, 2);
+}
+
 export type GithubBody = {
   action: string;
   pull_request: {
@@ -34,13 +38,13 @@ export async function backportTask(
   }
 
   logger.info(
-    `Starting backport: ${JSON.stringify({
+    `Starting backport: ${prettyStringify({
       ...config,
       accessToken: '<REDACTED>',
     })}`
   );
   const backportResponse = await backport.run(config);
-  logger.info(`Finished backport: ${JSON.stringify(backportResponse)}`);
+  logger.info(`Finished backport: ${prettyStringify(backportResponse)}`);
 
   await addPullRequestComment({
     upstream: config.upstream,
