@@ -25,10 +25,9 @@ export type GithubBody = {
 
 export async function backportTask(
   body: GithubBody,
-  username: string,
   accessToken: string
 ): Promise<void> {
-  const config = await getBackportConfig(body, username, accessToken);
+  const config = await getBackportConfig(body, accessToken);
   if (!config.upstream) {
     throw new Error('Missing upstream');
   }
@@ -54,9 +53,8 @@ export async function backportTask(
   });
 }
 
-async function getBackportConfig(
+export async function getBackportConfig(
   body: GithubBody,
-  username: string,
   accessToken: string
 ): Promise<ConfigOptions> {
   const configUrl = `https://raw.githubusercontent.com/${body.repository.owner.login}/${body.repository.name}/${body.repository.default_branch}/.backportrc.json`;
@@ -67,7 +65,7 @@ async function getBackportConfig(
 
     return {
       ...projectConfig,
-      username,
+      username: body.pull_request.merged_by.login,
       accessToken,
       ci: true,
       pullNumber: body.pull_request.number,

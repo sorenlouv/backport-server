@@ -5,13 +5,7 @@ import { getEnvironmentVariables } from './getEnvironmentVariables';
 import { logger } from './logger';
 
 const envVars = getEnvironmentVariables();
-const {
-  USERNAME,
-  ACCESS_TOKEN,
-  SERVER_PORT,
-  SERVER_HOST,
-  MERGED_BY_USERS,
-} = envVars;
+const { ACCESS_TOKEN, SERVER_PORT, SERVER_HOST, MERGED_BY_USERS } = envVars;
 
 // only allow a single backport operation at a time
 const queue = new PQueue({ concurrency: 1 });
@@ -41,7 +35,7 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
   // add backport operation to queue to ensure simultaneous request happen in sequence - not in parallel
   queue.add(async () => {
     try {
-      return await backportTask(body, USERNAME, ACCESS_TOKEN);
+      return await backportTask(body, ACCESS_TOKEN);
     } catch (e) {
       logger.error('An error occurred while running backport task');
       logger.error(e);
