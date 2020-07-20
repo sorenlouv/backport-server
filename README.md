@@ -4,7 +4,7 @@ Backport Server should be used together with [`backport`](https://github.com/sqr
 
 ### Start server
 
-```
+```sh
 # clone
 git clone https://github.com/sqren/backport-server.git
 
