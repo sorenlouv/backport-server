@@ -5,6 +5,9 @@ Backport Server should be used together with [`backport`](https://github.com/sqr
 ### Start server
 
 ```
+# clone
+git clone https://github.com/sqren/backport-server.git
+
 # install dependencies
 yarn
 
