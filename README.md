@@ -15,7 +15,7 @@ yarn
 yarn start
 ```
 
-Note: You can specify `ACCESS_TOKEN`, `MERGED_BY_USERS`, `SERVER_HOST` and `SERVER_PORT` via [.env file](.env.example) or environment variables.
+Note: You can specify `USERNAME`, `ACCESS_TOKEN`, `MERGED_BY_USERS`, `SERVER_HOST` and `SERVER_PORT` via [.env file](.env.example) or environment variables.
 
 ### Add webhook
 

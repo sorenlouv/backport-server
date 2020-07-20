@@ -1,4 +1,4 @@
-import { getBackportConfig, GithubBody } from '../backportTask';
+import { getBackportConfig, GithubBody } from './backportTask';
 
 describe('getBackportConfig', () => {
   it('returns config', async () => {
