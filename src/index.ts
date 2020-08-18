@@ -41,7 +41,11 @@ server.post<{ Body: GithubBody }>('/', async (request, reply) => {
   // add backport operation to queue to ensure simultaneous request happen in sequence - not in parallel
   queue.add(async () => {
     try {
-      return await backportTask(body, USERNAME, ACCESS_TOKEN);
+      return await backportTask({
+        body,
+        username: USERNAME,
+        accessToken: ACCESS_TOKEN,
+      });
     } catch (e) {
       logger.error('An error occurred while running backport task');
       logger.error(e);

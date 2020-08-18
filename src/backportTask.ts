@@ -23,12 +23,16 @@ export type GithubBody = {
   };
 };
 
-export async function backportTask(
-  body: GithubBody,
-  username: string,
-  accessToken: string
-): Promise<void> {
-  const config = await getBackportConfig(body, username, accessToken);
+export async function backportTask({
+  body,
+  username,
+  accessToken,
+}: {
+  body: GithubBody;
+  username: string;
+  accessToken: string;
+}): Promise<void> {
+  const config = await getBackportConfig({ body, username, accessToken });
   if (!config.upstream) {
     throw new Error('Missing upstream');
   }
@@ -54,11 +58,15 @@ export async function backportTask(
   });
 }
 
-export async function getBackportConfig(
-  body: GithubBody,
-  username: string,
-  accessToken: string
-): Promise<ConfigOptions> {
+export async function getBackportConfig({
+  body,
+  username,
+  accessToken,
+}: {
+  body: GithubBody;
+  username: string;
+  accessToken: string;
+}): Promise<ConfigOptions> {
   const configUrl = `https://raw.githubusercontent.com/${body.repository.owner.login}/${body.repository.name}/${body.repository.default_branch}/.backportrc.json`;
 
   try {

@@ -16,13 +16,19 @@ describe('getBackportConfig', () => {
         },
       },
     } as GithubBody;
-    const accessToken = 'abcdefg';
-    expect(await getBackportConfig(body, accessToken)).toEqual({
+
+    expect(
+      await getBackportConfig({
+        body,
+        username: 'sqren',
+        accessToken: 'abcdefg',
+      })
+    ).toEqual({
       accessToken: 'abcdefg',
       assignees: ['sqren'],
       branchLabelMapping: {
         '^v(\\d+).(\\d+).\\d+$': '$1.$2',
-        '^v7.9.0$': '7.x',
+        '^v7.10.0$': '7.x',
         '^v8.0.0$': 'master',
       },
       ci: true,
@@ -30,6 +36,7 @@ describe('getBackportConfig', () => {
       targetBranchChoices: [
         { checked: true, name: 'master' },
         { checked: true, name: '7.x' },
+        '7.9',
         '7.8',
         '7.7',
         '7.6',
