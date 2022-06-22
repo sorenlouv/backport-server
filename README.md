@@ -1,3 +1,9 @@
+# This project has been archived
+
+Please use [Backport Github action](https://github.com/sqren/backport-github-action) instead.
+
+---
+
 Backport Server should be used together with [`backport`](https://github.com/sqren/backport) to automatically backport commits when a pull request is merged.
 
 ## Getting Started
